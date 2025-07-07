@@ -1,0 +1,61 @@
+server:
+  port: 8080
+  servlet:
+    context-path: /api
+
+spring:
+  application:
+    name: aceup-user-service
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/aceup_dev
+    username: postgres
+    password: Password@123
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update    # change to validate or none in prod
+    show-sql: true
+    properties:
+      hibernate:
+        '[format_sql]': true
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+
+  # Profile-specific configuration files (optional)
+  config:
+    activate:
+      on-profile: default
+
+logging:
+  level:
+    root: INFO
+    '[org.springframework.web]': DEBUG
+    '[com.aceup]': DEBUG
+  file:
+    name: logs/aceup-user-service.log
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+    file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+
+# Swagger/OpenAPI config (via springdoc-openapi)
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+    operationsSorter: method
+    tagsSorter: alpha
+    display-request-duration: true
+
+# JWT Configuration (Optional, if you want to keep it configurable)
+jwt:
+  secret: Pz9gK9L3+r5mHo3avYj+PkUJYzMEY7szFja6GKvJ9Bs=
+  expiration: 3600000 # 1 hour in milliseconds
+
+# Enable actuator endpoints (optional monitoring)
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
