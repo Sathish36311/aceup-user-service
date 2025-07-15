@@ -2,6 +2,7 @@ package com.aceup.user.controller;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -14,6 +15,7 @@ import com.aceup.user.dto.LoginResponse;
 import com.aceup.user.dto.RegisterRequest;
 import com.aceup.user.dto.RegisterResponse;
 import com.aceup.user.dto.RoleUpdateRequest;
+import com.aceup.user.model.User;
 import com.aceup.user.service.UserService;
 
 import jakarta.validation.Valid;
@@ -42,5 +44,12 @@ public class UserController {
 	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	public ResponseEntity<?> updateRole(@PathVariable Long id, @RequestBody RoleUpdateRequest request) {
 		return ResponseEntity.ok(userService.updateUserRole(id, request.role()));
+	}
+
+	@GetMapping("/{id}")
+	@PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_COACH', 'ROLE_PLAYER')")
+	public ResponseEntity<?> getUserById(@PathVariable Long id) {
+		User user = userService.getUserById(id); // @Cacheable inside service
+		return ResponseEntity.ok(user);
 	}
 }

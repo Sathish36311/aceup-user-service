@@ -18,4 +18,6 @@ public interface UserService {
 
 	User updateUserRole(Long id, Role newRole);
 
+	User getUserById(Long id);
+
 }

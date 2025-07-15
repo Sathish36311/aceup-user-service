@@ -1,5 +1,6 @@
 package com.aceup.user.model;
 
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.List;
 
@@ -8,6 +9,8 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import com.aceup.user.security.Role;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -30,7 +33,8 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class User implements UserDetails {
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class User implements UserDetails, Serializable {
 
 	private static final long serialVersionUID = -6450552596378508987L;
 
@@ -49,6 +53,7 @@ public class User implements UserDetails {
 	private Role role;
 
 	@Override
+	@JsonIgnore
 	public Collection<? extends GrantedAuthority> getAuthorities() {
 		return List.of(new SimpleGrantedAuthority(role.name()));
 	}

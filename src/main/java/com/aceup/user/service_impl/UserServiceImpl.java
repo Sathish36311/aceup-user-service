@@ -2,7 +2,10 @@ package com.aceup.user.service_impl;
 
 import java.util.Optional;
 
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -17,8 +20,10 @@ import com.aceup.user.security.Role;
 import com.aceup.user.service.UserService;
 
 import jakarta.annotation.PostConstruct;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
+@Slf4j
 public class UserServiceImpl implements UserService {
 
 	private final UserRepository userRepository;
@@ -70,9 +75,18 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
+	@CacheEvict(value = "users", key = "#id")
 	public User updateUserRole(Long id, Role newRole) {
-		// TODO Auto-generated method stub
-		return null;
+		User user = userRepository.findById(id).orElseThrow(() -> new UsernameNotFoundException("User not found!"));
+		user.setRole(newRole);
+		return userRepository.save(user);
+	}
+
+	@Override
+	@Cacheable(value = "users", key = "#id")
+	public User getUserById(Long id) {
+		log.info("Fetching from DB");
+		return userRepository.findById(id).orElseThrow(() -> new UsernameNotFoundException("User not found!"));
 	}
 
 }
