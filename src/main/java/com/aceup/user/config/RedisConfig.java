@@ -13,12 +13,10 @@ import org.springframework.data.redis.serializer.RedisSerializationContext;
 @EnableCaching
 public class RedisConfig {
 
-    @Bean
-    public RedisCacheManager cacheManager(RedisConnectionFactory redisConnectionFactory) {
-        RedisCacheConfiguration config = RedisCacheConfiguration.defaultCacheConfig()
-            .serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(
-                new GenericJackson2JsonRedisSerializer()
-            ));
-        return RedisCacheManager.builder(redisConnectionFactory).cacheDefaults(config).build();
-    }
+	@Bean
+	RedisCacheManager cacheManager(RedisConnectionFactory redisConnectionFactory) {
+		RedisCacheConfiguration config = RedisCacheConfiguration.defaultCacheConfig().serializeValuesWith(
+				RedisSerializationContext.SerializationPair.fromSerializer(new GenericJackson2JsonRedisSerializer()));
+		return RedisCacheManager.builder(redisConnectionFactory).cacheDefaults(config).build();
+	}
 }

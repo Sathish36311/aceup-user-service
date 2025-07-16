@@ -13,6 +13,7 @@ import com.aceup.user.dto.LoginRequest;
 import com.aceup.user.dto.LoginResponse;
 import com.aceup.user.dto.RegisterRequest;
 import com.aceup.user.dto.RegisterResponse;
+import com.aceup.user.dto.UserDTO;
 import com.aceup.user.model.User;
 import com.aceup.user.repository.UserRepository;
 import com.aceup.user.security.JwtService;
@@ -43,13 +44,13 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public RegisterResponse register(RegisterRequest request) {
-		User user = User.builder().name(request.name()).email(request.email())
+		User user = User.builder().username(request.name()).email(request.email())
 				.password(passwordEncoder.encode(request.password()))
 				.role(Role.valueOf(request.role() != null ? request.role() : "ROLE_FAN")).build();
 
 		userRepository.save(user);
 		String token = jwtService.generateToken(request.email());
-		return new RegisterResponse(token, user.getName(), user.getEmail(), user.getRole().name());
+		return new RegisterResponse(token, user.getUsername(), user.getEmail(), user.getRole().name());
 
 	}
 
@@ -62,13 +63,13 @@ public class UserServiceImpl implements UserService {
 			throw new BadCredentialsException("Invalid password");
 		}
 		String token = jwtService.generateToken(request.email());
-		return new LoginResponse(token, user.getName(), user.getEmail(), user.getRole().name());
+		return new LoginResponse(token, user.getUsername(), user.getEmail(), user.getRole().name());
 	}
 
 	@PostConstruct
 	public void seedAdmin() {
 		if (userRepository.findByEmail("sathishkrishnan369@gmail.com").isEmpty()) {
-			User admin = User.builder().name("Sathish").email("sathishkrishnan369@gmail.com")
+			User admin = User.builder().username("Sathish").email("sathishkrishnan369@gmail.com")
 					.password(passwordEncoder.encode("Sathish7*")).role(Role.ROLE_ADMIN).build();
 			userRepository.save(admin);
 		}
@@ -84,9 +85,9 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	@Cacheable(value = "users", key = "#id")
-	public User getUserById(Long id) {
-		log.info("Fetching from DB");
-		return userRepository.findById(id).orElseThrow(() -> new UsernameNotFoundException("User not found!"));
+	public UserDTO getUserById(Long id) {
+		User user =  userRepository.findById(id).orElseThrow(() -> new UsernameNotFoundException("User not found!"));
+		return new UserDTO(user.getId(), user.getUsername(), user.getEmail());
 	}
 
 }

@@ -6,6 +6,7 @@ import com.aceup.user.dto.LoginRequest;
 import com.aceup.user.dto.LoginResponse;
 import com.aceup.user.dto.RegisterRequest;
 import com.aceup.user.dto.RegisterResponse;
+import com.aceup.user.dto.UserDTO;
 import com.aceup.user.model.User;
 import com.aceup.user.security.Role;
 
@@ -18,6 +19,6 @@ public interface UserService {
 
 	User updateUserRole(Long id, Role newRole);
 
-	User getUserById(Long id);
+	UserDTO getUserById(Long id);
 
 }

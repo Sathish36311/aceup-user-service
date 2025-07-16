@@ -7,9 +7,7 @@ import org.springframework.cache.annotation.EnableCaching;
 @SpringBootApplication
 @EnableCaching
 public class AceUpUserServiceApplication {
-
 	public static void main(String[] args) {
 		SpringApplication.run(AceUpUserServiceApplication.class, args);
 	}
-
 }

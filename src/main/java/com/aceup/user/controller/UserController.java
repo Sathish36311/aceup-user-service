@@ -15,7 +15,7 @@ import com.aceup.user.dto.LoginResponse;
 import com.aceup.user.dto.RegisterRequest;
 import com.aceup.user.dto.RegisterResponse;
 import com.aceup.user.dto.RoleUpdateRequest;
-import com.aceup.user.model.User;
+import com.aceup.user.dto.UserDTO;
 import com.aceup.user.service.UserService;
 
 import jakarta.validation.Valid;
@@ -49,7 +49,7 @@ public class UserController {
 	@GetMapping("/{id}")
 	@PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_COACH', 'ROLE_PLAYER')")
 	public ResponseEntity<?> getUserById(@PathVariable Long id) {
-		User user = userService.getUserById(id); // @Cacheable inside service
+		UserDTO user = userService.getUserById(id);
 		return ResponseEntity.ok(user);
 	}
 }
