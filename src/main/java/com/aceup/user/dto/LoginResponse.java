@@ -1,4 +1,5 @@
 package com.aceup.user.dto;
 
-public record LoginResponse(String token, String name, String email, String role) {
-}
+import com.aceup.user.security.Role;
+
+public record LoginResponse(String accessToken, String username, String email, Role role) {}
